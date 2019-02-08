@@ -14,6 +14,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import scialsk.program.print.OptionPageFrame;
+import scialsk.program.print.PrintFile;
 import scislak.program.saveFile.SaveAndOpenDocument;
 import scislak.program.saveFile.SaveFileClosing;
 import scislak.program.saveFile.SaveFileNewDocumet;
@@ -96,6 +98,10 @@ public class Frame{
 		newFileListener(newFile);
 		openFileListener(openFile);
 		saveFileListener(saveFile);
+		saveAsFileListener(saveAsFile);
+		optionFileListener(optionFile);
+		printFileListener(printFile);
+		exitFileListener(exit);
 	}
 
 	private void addEdit(JMenu edit) {
@@ -196,7 +202,47 @@ public class Frame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new SimpleSave();
+				new SimpleSave(false);
+			}
+		});
+	}
+	
+	private void saveAsFileListener(JMenuItem saveAsFile) {
+		saveAsFile.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new SimpleSave(true);
+			}
+		});
+	}
+	
+	private void optionFileListener(JMenuItem optionFile) {
+		optionFile.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new OptionPageFrame();
+			}
+		});
+	}
+	
+	private void printFileListener(JMenuItem printFile) {
+		printFile.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new PrintFile();
+			}
+		});
+	}
+	
+	private void exitFileListener(JMenuItem exitFile) {
+		exitFile.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new SaveFileClosing();
 			}
 		});
 	}

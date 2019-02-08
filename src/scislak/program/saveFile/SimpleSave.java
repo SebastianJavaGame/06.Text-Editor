@@ -5,9 +5,12 @@ import scislak.program.Frame;
 
 public class SimpleSave extends SaveFile{
 
-	public SimpleSave() {
+	public SimpleSave(boolean alwaysShowDialog) {
 		super();
-		overwriteFile();
+		if(alwaysShowDialog)
+			showSaveDialogFrame();
+		else
+			loadOldDocument(true);
 	}
 	
 	@Override
