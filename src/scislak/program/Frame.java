@@ -7,6 +7,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
+<<<<<<< HEAD
+=======
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+>>>>>>> no message
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -17,6 +25,11 @@ import javax.swing.JTextArea;
 
 import scialsk.program.print.OptionPageFrame;
 import scialsk.program.print.PrintFile;
+<<<<<<< HEAD
+=======
+import scislak.edit.FindSimple;
+import scislak.edit.GoToFrame;
+>>>>>>> no message
 import scislak.program.saveFile.SaveAndOpenDocument;
 import scislak.program.saveFile.SaveFileClosing;
 import scislak.program.saveFile.SaveFileNewDocumet;
@@ -27,9 +40,19 @@ public class Frame{
 
 	private String actualDocumentName;
 	private String oldDocument;
+<<<<<<< HEAD
     private JFrame frame;
 	private JMenuBar bar;
 	private JTextArea textArea;	
+=======
+        private String actualDocument;
+        private String storageDocument;
+        private boolean isDocumentFromStorage;
+        
+        private JFrame frame;
+	private JMenuBar bar;
+	private JTextArea textArea;
+>>>>>>> no message
 	
 	public static Frame getInstance(){
         return instance;
@@ -39,8 +62,16 @@ public class Frame{
 	
 	public void init() {
 		actualDocumentName = "Bez nazwy.txt";
+<<<<<<< HEAD
 		frame = new JFrame(actualDocumentName +" - Notepade");
 		setFrame();
+=======
+                storageDocument = "";
+                actualDocument = "";
+                isDocumentFromStorage = false;
+		frame = new JFrame(actualDocumentName +" - Notepade");
+                setFrame();
+>>>>>>> no message
 		addTopBar();
 		addTextArea();
 	}
@@ -132,6 +163,21 @@ public class Frame{
 		edit.addSeparator();
 		edit.add(selectAll);
 		edit.add(dateHour);
+<<<<<<< HEAD
+=======
+                
+                undoListener(undo);
+                cutListener(cut);
+                copyListener(copy);
+                pasteListener(paste);
+                deleteListener(delete);
+                findListener(find);
+                findNextListener(findNext);
+                changeListener(change);
+                goToListener(goTo);
+                selectAllListener(selectAll);
+                dateHourListener(dateHour);
+>>>>>>> no message
 	}
 	
 	private void addFormat(JMenu format) {
@@ -233,12 +279,20 @@ public class Frame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+<<<<<<< HEAD
 				try {
 					new PrintFile();
 				} catch (PrinterException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+=======
+                            try {
+                                new PrintFile();
+                            } catch (PrinterException ex) {
+                                Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+>>>>>>> no message
 			}
 		});
 	}
@@ -252,6 +306,100 @@ public class Frame{
 			}
 		});
 	}
+<<<<<<< HEAD
+=======
+        
+        private void undoListener(JMenuItem item){
+            item.addActionListener((ActionEvent e) -> {
+                if(isDocumentFromStorage){
+                    storageDocument = getDocumentText();
+                    setTextDocument(actualDocument);
+                    isDocumentFromStorage = false;
+                }else{
+                    actualDocument = getDocumentText();
+                    setTextDocument(storageDocument);
+                    isDocumentFromStorage = true;
+                }
+            });
+        }
+        
+        private void cutListener(JMenuItem item){
+            
+        }
+        
+        private void copyListener(JMenuItem item){
+            
+        }
+        
+        private void pasteListener(JMenuItem item){
+            
+        }
+        
+        private void deleteListener(JMenuItem item){
+            item.addActionListener((ActionEvent e) -> {
+                if(textArea.getSelectedText() != null){
+                    saveStorage();
+                    textArea.setText(textArea.getText().replace(textArea.getSelectedText(),""));
+                }
+                });
+        }
+        
+        private void findListener(JMenuItem item){
+            item.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    new FindSimple("Find").init();
+                }
+            });
+        }
+        
+        private void findNextListener(JMenuItem item){
+            item.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    FindSimple findSimple = new FindSimple();
+                    findSimple.buttonFindNextListener(item);
+                }
+            });
+        }
+        
+        private void changeListener(JMenuItem item){
+            
+        }
+        
+        private void goToListener(JMenuItem item){
+            item.addActionListener((ActionEvent e) -> {
+                new GoToFrame();
+            });
+        }
+        
+        private void selectAllListener(JMenuItem item){
+            item.addActionListener((ActionEvent e) -> {
+                textArea.selectAll();
+            });
+        }
+        
+        private void dateHourListener(JMenuItem item){
+            item.addActionListener((ActionEvent e) -> {
+                saveStorage();
+                DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd.MM.yyyy");
+                Date date = new Date();
+                setTextDocument(dateFormat.format(date));
+            });
+        }
+        
+        private void saveStorage(){
+            if(isDocumentFromStorage){
+                actualDocument = getDocumentText();
+            }else{
+                storageDocument = getDocumentText();
+            }
+        }
+        
+        public void setCursorToPosition(int position){
+            textArea.setCaretPosition(position);
+        }
+>>>>>>> no message
 	
 	public void clearDocument() {
 		textArea.setText("");
@@ -265,6 +413,13 @@ public class Frame{
 	public String getDocumentText() {
 		return textArea.getText();
 	}
+<<<<<<< HEAD
+=======
+        
+        public JTextArea getTextArea(){
+            return textArea;
+        }
+>>>>>>> no message
 	
 	public JFrame getFrame() {
 		return frame;
