@@ -31,12 +31,9 @@ public class PrintFile{
                 job.print(attributes);
         }
         
-<<<<<<< HEAD
+
         @SuppressWarnings("serial")
-		class PrintComponent extends JComponent implements Printable{
-=======
         class PrintComponent extends JComponent implements Printable{
->>>>>>> no message
             @Override
             public void paintComponent(Graphics g){
                 Graphics2D g2 = (Graphics2D) g;

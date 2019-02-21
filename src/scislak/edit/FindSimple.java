@@ -13,10 +13,10 @@ import scislak.program.Frame;
 
 public class FindSimple extends Find{
 
-    private static int iterator;
-    private static String finding;
+    protected static int iterator;
+    protected static String finding;
     
-    private JTextField fieldFinding;
+    protected JTextField fieldFinding;
     
     public FindSimple(String name) {
         super(name);
@@ -24,18 +24,18 @@ public class FindSimple extends Find{
 
     public FindSimple() {}
 
-    public void init() {
+    public void init(int x, int y) {
         setVisible(true);
 	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	setResizable(false);
 		
 	Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-	setSize(220, 150);
+	setSize(x, y);
 	setLocation(dim.width/2-getSize().width/2, dim.height/2-getSize().height/2);
         addInside();
     }
 
-    private void addInside() {
+    protected void addInside() {
         JPanel panel = new JPanel();
         JButton buttonFind = new JButton("Find");
         fieldFinding = new JTextField();
@@ -55,7 +55,7 @@ public class FindSimple extends Find{
         buttonFindListener(buttonFind);
     }
     
-    private void buttonFindListener(JButton findButton){
+    protected void buttonFindListener(JButton findButton){
         findButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -77,5 +77,9 @@ public class FindSimple extends Find{
                     iterator = findFrom(finding, Frame.getInstance().getDocumentText(), Frame.getInstance().getTextArea(), iterator);
             }
         });
+    }
+    
+    protected void setIteratorToZero(){
+        iterator = 0;
     }
 }

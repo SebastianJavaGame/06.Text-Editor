@@ -33,6 +33,7 @@ public abstract class Find extends JFrame{
         int lenghtOfFinfing = finding.length();
         
         for(int i = iterator; i <document.length(); i++){
+            System.out.println(document.length());
             if(document.substring(i, i +lenghtOfFinfing).equals(finding)){
                 textArea.select(i, i +lenghtOfFinfing);
                 iterator = i;

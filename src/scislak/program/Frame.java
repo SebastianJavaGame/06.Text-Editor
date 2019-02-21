@@ -7,29 +7,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
-<<<<<<< HEAD
-=======
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
->>>>>>> no message
-
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-
 import scialsk.program.print.OptionPageFrame;
 import scialsk.program.print.PrintFile;
-<<<<<<< HEAD
-=======
+import scislak.edit.ChangeSimple;
 import scislak.edit.FindSimple;
 import scislak.edit.GoToFrame;
->>>>>>> no message
 import scislak.program.saveFile.SaveAndOpenDocument;
 import scislak.program.saveFile.SaveFileClosing;
 import scislak.program.saveFile.SaveFileNewDocumet;
@@ -40,19 +33,13 @@ public class Frame{
 
 	private String actualDocumentName;
 	private String oldDocument;
-<<<<<<< HEAD
-    private JFrame frame;
+        private JFrame frame;
 	private JMenuBar bar;
 	private JTextArea textArea;	
-=======
+
         private String actualDocument;
         private String storageDocument;
         private boolean isDocumentFromStorage;
-        
-        private JFrame frame;
-	private JMenuBar bar;
-	private JTextArea textArea;
->>>>>>> no message
 	
 	public static Frame getInstance(){
         return instance;
@@ -62,16 +49,11 @@ public class Frame{
 	
 	public void init() {
 		actualDocumentName = "Bez nazwy.txt";
-<<<<<<< HEAD
-		frame = new JFrame(actualDocumentName +" - Notepade");
-		setFrame();
-=======
                 storageDocument = "";
                 actualDocument = "";
                 isDocumentFromStorage = false;
 		frame = new JFrame(actualDocumentName +" - Notepade");
                 setFrame();
->>>>>>> no message
 		addTopBar();
 		addTextArea();
 	}
@@ -163,8 +145,6 @@ public class Frame{
 		edit.addSeparator();
 		edit.add(selectAll);
 		edit.add(dateHour);
-<<<<<<< HEAD
-=======
                 
                 undoListener(undo);
                 cutListener(cut);
@@ -177,7 +157,6 @@ public class Frame{
                 goToListener(goTo);
                 selectAllListener(selectAll);
                 dateHourListener(dateHour);
->>>>>>> no message
 	}
 	
 	private void addFormat(JMenu format) {
@@ -275,27 +254,18 @@ public class Frame{
 	}
 	
 	private void printFileListener(JMenuItem printFile) {
-		printFile.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-<<<<<<< HEAD
-				try {
-					new PrintFile();
-				} catch (PrinterException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-=======
-                            try {
-                                new PrintFile();
-                            } catch (PrinterException ex) {
-                                Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
-                            }
->>>>>>> no message
-			}
-		});
-	}
+            printFile.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        new PrintFile();
+                    } catch (PrinterException ex) {
+                        Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+            });
+        }
 	
 	private void exitFileListener(JMenuItem exitFile) {
 		exitFile.addActionListener(new ActionListener() {
@@ -306,8 +276,6 @@ public class Frame{
 			}
 		});
 	}
-<<<<<<< HEAD
-=======
         
         private void undoListener(JMenuItem item){
             item.addActionListener((ActionEvent e) -> {
@@ -348,7 +316,7 @@ public class Frame{
             item.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    new FindSimple("Find").init();
+                    new FindSimple("Find").init(220, 150);
                 }
             });
         }
@@ -364,7 +332,9 @@ public class Frame{
         }
         
         private void changeListener(JMenuItem item){
-            
+            item.addActionListener((ActionEvent e) -> {
+                new ChangeSimple("Change").init(220,240);
+            });
         }
         
         private void goToListener(JMenuItem item){
@@ -388,7 +358,7 @@ public class Frame{
             });
         }
         
-        private void saveStorage(){
+        public void saveStorage(){
             if(isDocumentFromStorage){
                 actualDocument = getDocumentText();
             }else{
@@ -399,7 +369,6 @@ public class Frame{
         public void setCursorToPosition(int position){
             textArea.setCaretPosition(position);
         }
->>>>>>> no message
 	
 	public void clearDocument() {
 		textArea.setText("");
@@ -413,13 +382,10 @@ public class Frame{
 	public String getDocumentText() {
 		return textArea.getText();
 	}
-<<<<<<< HEAD
-=======
         
         public JTextArea getTextArea(){
             return textArea;
         }
->>>>>>> no message
 	
 	public JFrame getFrame() {
 		return frame;
