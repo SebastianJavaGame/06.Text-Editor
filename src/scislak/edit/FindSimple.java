@@ -18,8 +18,11 @@ public class FindSimple extends Find{
     
     protected JTextField fieldFinding;
     
+    private JButton buttonFind;
+    
     public FindSimple(String name) {
         super(name);
+        iterator = 0;
     }
 
     public FindSimple() {}
@@ -37,7 +40,7 @@ public class FindSimple extends Find{
 
     protected void addInside() {
         JPanel panel = new JPanel();
-        JButton buttonFind = new JButton("Find");
+        buttonFind = new JButton("Find");
         fieldFinding = new JTextField();
         
         buttonFind.setBounds(10, 20, 75, 25);
@@ -59,11 +62,7 @@ public class FindSimple extends Find{
         findButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String findString = fieldFinding.getText();
-                finding = findString;
-                
-                if(!finding.isEmpty())
-                    iterator = findFrom(findString, Frame.getInstance().getDocumentText(), Frame.getInstance().getTextArea(), iterator);
+                findMethod(fieldFinding);
             }
         });
     }
@@ -72,14 +71,30 @@ public class FindSimple extends Find{
         findNextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) { 
-                System.out.println(iterator);
                 if(!finding.isEmpty())
                     iterator = findFrom(finding, Frame.getInstance().getDocumentText(), Frame.getInstance().getTextArea(), iterator);
             }
         });
     }
     
+    protected void findMethod(JTextField fieldFinding){
+        String findString = fieldFinding.getText();
+        saveFieldFinding(findString);
+                
+        if(!finding.isEmpty())
+            iterator = findFrom(findString, Frame.getInstance().getDocumentText(), Frame.getInstance().getTextArea(), iterator);
+    }
+    
+    @Override
+    protected void doElse(){
+        saveFieldFinding(fieldFinding.getText());
+    }
+    
     protected void setIteratorToZero(){
         iterator = 0;
+    }
+    
+    protected static void saveFieldFinding(String text){
+        finding = text;
     }
 }

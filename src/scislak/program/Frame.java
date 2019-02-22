@@ -1,17 +1,27 @@
 package scislak.program;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -23,6 +33,7 @@ import scialsk.program.print.PrintFile;
 import scislak.edit.ChangeSimple;
 import scislak.edit.FindSimple;
 import scislak.edit.GoToFrame;
+import scislak.edit.JFontChooser;
 import scislak.program.saveFile.SaveAndOpenDocument;
 import scislak.program.saveFile.SaveFileClosing;
 import scislak.program.saveFile.SaveFileNewDocumet;
@@ -56,6 +67,7 @@ public class Frame{
                 setFrame();
 		addTopBar();
 		addTextArea();
+                textArea.setLineWrap(true);
 	}
 
 	private void addTopBar() {
@@ -160,11 +172,37 @@ public class Frame{
 	}
 	
 	private void addFormat(JMenu format) {
-		JMenuItem wrappingLines = new JMenuItem("Wrapping lines");
+		JCheckBoxMenuItem wrappingLines = new JCheckBoxMenuItem("Wrapping lines");
 		JMenuItem font = new JMenuItem("Font..");
 		
 		format.add(wrappingLines);
 		format.add(font);
+                
+                wrappingLines.setSelected(true);
+                
+                wrappingLines.addItemListener(new ItemListener() {
+                    @Override
+                    public void itemStateChanged(ItemEvent e) {
+                        if(e.getStateChange() == ItemEvent.SELECTED)
+                            textArea.setLineWrap(true);
+                        else{
+                            textArea.setLineWrap(false);
+                        }
+                    }
+                });
+                
+                font.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        JFontChooser fontChooser = new JFontChooser();                                    
+                        int result = fontChooser.showDialog(textArea);
+                        if (result == JFontChooser.OK_OPTION)
+                        {
+                           Font font = fontChooser.getSelectedFont(); 
+                           textArea.setFont(font);
+                        }
+                    }
+                });
 	}
 	
 	private void addView(JMenu view) {
@@ -292,24 +330,48 @@ public class Frame{
         }
         
         private void cutListener(JMenuItem item){
-            
+            item.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    copyText();
+                    deleteText();
+                }
+            });
         }
         
         private void copyListener(JMenuItem item){
-            
+            item.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    copyText();
+                }
+            });
         }
         
         private void pasteListener(JMenuItem item){
-            
+            item.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    Transferable t = c.getContents(this);
+                    if (t == null)
+                        return;
+                    try {
+                        int count = textArea.getCaretPosition();
+                        textArea.setText(textArea.getText().substring(0, count) +(String) t.getTransferData(DataFlavor.stringFlavor) +textArea.getText().substring(count));
+                    } catch (UnsupportedFlavorException ex) {
+                        Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
         }
         
         private void deleteListener(JMenuItem item){
             item.addActionListener((ActionEvent e) -> {
-                if(textArea.getSelectedText() != null){
-                    saveStorage();
-                    textArea.setText(textArea.getText().replace(textArea.getSelectedText(),""));
-                }
-                });
+                deleteText();
+            });
         }
         
         private void findListener(JMenuItem item){
@@ -356,6 +418,19 @@ public class Frame{
                 Date date = new Date();
                 setTextDocument(dateFormat.format(date));
             });
+        }
+        
+        private void copyText(){
+            StringSelection selection = new StringSelection(getTextArea().getSelectedText());
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(selection, selection);
+        }
+        
+        private void deleteText(){
+            if(textArea.getSelectedText() != null){
+                saveStorage();
+                textArea.setText(textArea.getText().replace(textArea.getSelectedText(),""));
+            }
         }
         
         public void saveStorage(){

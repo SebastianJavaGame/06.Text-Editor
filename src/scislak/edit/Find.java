@@ -18,22 +18,35 @@ public abstract class Find extends JFrame{
         super(name);
         buttonCancel = new JButton("Cancel");
         cancelListener(buttonCancel);
+        closeListener();
+    }
+    
+    private void closeListener(){
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                doElse();
+                dispose();
+            }
+        });
     }
     
     private void cancelListener(JButton cancel){
         cancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                doElse();
+                dispose(); 
             }
         });
     }
+    
+    protected void doElse(){}
     
     protected static int findFrom(String finding, String document, JTextArea textArea, int iterator){
         int lenghtOfFinfing = finding.length();
         
         for(int i = iterator; i <document.length(); i++){
-            System.out.println(document.length());
             if(document.substring(i, i +lenghtOfFinfing).equals(finding)){
                 textArea.select(i, i +lenghtOfFinfing);
                 iterator = i;

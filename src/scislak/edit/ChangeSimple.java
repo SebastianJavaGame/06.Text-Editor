@@ -18,6 +18,7 @@ public class ChangeSimple extends FindSimple{
     public ChangeSimple(String name){
         super(name);
         area = Frame.getInstance().getTextArea();
+        iterator = 0;
     }
     
     @Override
@@ -57,10 +58,10 @@ public class ChangeSimple extends FindSimple{
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(area);
                 if(!fieldChanging.getText().isEmpty() && area.getSelectedText() != null){
                     Frame.getInstance().saveStorage();
-                    area.setText(area.getText().replace(area.getSelectedText(), fieldChanging.getText()));
+                    area.setText(area.getText().substring(0, iterator-1) +area.getText().substring(iterator-1).replaceFirst(area.getSelectedText(), fieldChanging.getText()));
+                    saveFields(fieldFinding.getText(), fieldChanging.getText());
                 }
             }
         });
@@ -70,12 +71,23 @@ public class ChangeSimple extends FindSimple{
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(area);
-                if(!fieldChanging.getText().isEmpty() && area.getSelectedText() != null){
+                if(!fieldChanging.getText().isEmpty() && !fieldFinding.getText().isEmpty()){
+                    findMethod(fieldFinding);
                     Frame.getInstance().saveStorage();
                     area.setText(area.getText().replace(area.getSelectedText(), fieldChanging.getText()));
+                    saveFields(fieldFinding.getText(), fieldChanging.getText());
                 }
             }
         });
+    }
+    
+    @Override
+    protected void doElse(){
+        saveFields(fieldFinding.getText(), fieldChanging.getText());
+    }
+    
+    protected void saveFields(String textFinding, String textChanging){
+        finding = textFinding;
+        changing = textChanging;
     }
 }
