@@ -11,6 +11,9 @@ import javax.swing.JTextField;
 import scislak.program.Frame;
 
 public class GoToFrame extends JFrame{  
+    private static int cursorLine;
+    private static int cursorPosition;
+    
     public GoToFrame(){
         super("GoTo");
         init();
@@ -86,4 +89,20 @@ public class GoToFrame extends JFrame{
      }  
      return true;  
     }
+  
+  public static void updateCursorPositions(){
+      String[] lines = Frame.getInstance().getDocumentText().split("\n"); 
+            
+        int cursorPos = Frame.getInstance().getTextArea().getCaretPosition();              
+        int sum =0;
+        //TODO update cursor position
+  }
+  
+  public static int getCursorLine(){
+      return cursorLine;
+  }
+  
+  public static int getCursorPosition(){
+      return cursorPosition;
+  }
 }

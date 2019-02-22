@@ -1,5 +1,6 @@
 package scislak.program;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -26,8 +27,11 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import scialsk.program.print.OptionPageFrame;
 import scialsk.program.print.PrintFile;
 import scislak.edit.ChangeSimple;
@@ -68,6 +72,7 @@ public class Frame{
 		addTopBar();
 		addTextArea();
                 textArea.setLineWrap(true);
+                updateStatusBar();
 	}
 
 	private void addTopBar() {
@@ -91,6 +96,11 @@ public class Frame{
 		addFormat(format);
 		addView(view);
 		addHelp(help);
+                
+                StatusBar bar = StatusBar.getInstance();
+                bar.init();
+                JPanel status = bar;
+                frame.add(status, BorderLayout.SOUTH);
 	}
 	
 	private void addTextArea() {
@@ -100,7 +110,21 @@ public class Frame{
 		frame.add(scrollPane);
 		frame.validate();
 		textArea.requestFocus();
+                
+                textArea.addCaretListener(new CaretListener() {
+                    @Override
+                    public void caretUpdate(CaretEvent e) {
+                        updateStatusBar();
+                    }
+                });
 	}
+        
+        private void updateStatusBar(){
+            GoToFrame.updateCursorPositions();
+            int x = GoToFrame.getCursorPosition();
+            int y = GoToFrame.getCursorLine();
+            StatusBar.getInstance().updateStatus(x, y);
+        }
 	
 	private void addFile(JMenu file) {
 		JMenuItem newFile = new JMenuItem("New");
