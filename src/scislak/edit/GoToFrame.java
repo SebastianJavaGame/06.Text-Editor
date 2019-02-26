@@ -3,11 +3,15 @@ package scislak.edit;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.BadLocationException;
 import scislak.program.Frame;
 
 public class GoToFrame extends JFrame{  
@@ -91,18 +95,21 @@ public class GoToFrame extends JFrame{
     }
   
   public static void updateCursorPositions(){
-      String[] lines = Frame.getInstance().getDocumentText().split("\n"); 
-            
-        int cursorPos = Frame.getInstance().getTextArea().getCaretPosition();              
-        int sum =0;
-        //TODO update cursor position
+        try { 
+            JTextArea area = Frame.getInstance().getTextArea();
+            int cursorPos = area.getCaretPosition();
+            cursorLine = area.getLineOfOffset(cursorPos);
+            cursorPosition = cursorPos - area.getLineStartOffset(cursorLine);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(GoToFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
   }
   
   public static int getCursorLine(){
-      return cursorLine;
+      return cursorLine +1;
   }
   
   public static int getCursorPosition(){
-      return cursorPosition;
+      return cursorPosition +1;
   }
 }

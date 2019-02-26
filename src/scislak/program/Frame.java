@@ -1,6 +1,7 @@
 package scislak.program;
 
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -17,6 +18,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -55,6 +58,7 @@ public class Frame{
         private String actualDocument;
         private String storageDocument;
         private boolean isDocumentFromStorage;
+        private boolean showStatusBar;
 	
 	public static Frame getInstance(){
         return instance;
@@ -72,7 +76,7 @@ public class Frame{
 		addTopBar();
 		addTextArea();
                 textArea.setLineWrap(true);
-                updateStatusBar();
+                showStatusBar = false;
 	}
 
 	private void addTopBar() {
@@ -100,6 +104,7 @@ public class Frame{
                 StatusBar bar = StatusBar.getInstance();
                 bar.init();
                 JPanel status = bar;
+                bar.setVisible(false);
                 frame.add(status, BorderLayout.SOUTH);
 	}
 	
@@ -114,7 +119,8 @@ public class Frame{
                 textArea.addCaretListener(new CaretListener() {
                     @Override
                     public void caretUpdate(CaretEvent e) {
-                        updateStatusBar();
+                        if(showStatusBar)
+                            updateStatusBar();
                     }
                 });
 	}
@@ -230,9 +236,23 @@ public class Frame{
 	}
 	
 	private void addView(JMenu view) {
-		JMenuItem statusBar = new JMenuItem("Statusbar");
+		JCheckBoxMenuItem statusBar = new JCheckBoxMenuItem("Statusbar");
 		
 		view.add(statusBar);
+                statusBar.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if(statusBar.isSelected()){
+                            showStatusBar = true;
+                            StatusBar.getInstance().setVisible(true);
+                            updateStatusBar();
+                        }
+                        else{
+                            showStatusBar = false;
+                            StatusBar.getInstance().setVisible(false);
+                        }
+                    }
+                });
 	}
 	
 	private void addHelp(JMenu help) {
@@ -241,6 +261,26 @@ public class Frame{
 		
 		help.add(showHelp);
 		help.add(infoNotepade);
+                
+                showHelp.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            Desktop.getDesktop().browse(new URI("https://github.com/SebastianJavaGame"));
+                        } catch (URISyntaxException ex) {
+                            Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                });
+                
+                infoNotepade.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        new InfoFrame();
+                    }
+                });
 	}
 
 	private void setFrame() {
